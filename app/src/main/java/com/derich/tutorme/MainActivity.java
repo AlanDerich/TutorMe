@@ -4,6 +4,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +13,15 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 
 public class MainActivity extends AppCompatActivity {
     Button sign_in_btn,register_btn;
     private CheckBox checkBoxTutor;
     private CheckBox checkBoxStudent;
+    private FirebaseUser mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,9 +32,18 @@ public class MainActivity extends AppCompatActivity {
         sign_in_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent=new Intent(MainActivity.this,LoginActivity.class);
+                startActivity(intent);
             }
         });
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (mUser!=null){
+//            signOut();
+            Intent intent= new Intent(MainActivity.this,MajorActivity.class);
+            startActivity(intent);
+        }
+        else {
+        }
         register_btn.setOnClickListener(view -> showSignUpDialog());
     }
 
@@ -60,6 +74,16 @@ public class MainActivity extends AppCompatActivity {
         alertDialog.setIcon(R.drawable.background);
         alertDialog.setPositiveButton("DONE", (dialog, i) -> {
             if (checkBoxStudent.isChecked() || checkBoxTutor.isChecked()){
+                if (checkBoxStudent.isChecked()){
+                    Intent intent=new Intent(this,SignUpActivity.class);
+                    startActivity(intent);
+
+                }
+                else {
+                    Intent intent=new Intent(this,SignUpTutor.class);
+                    startActivity(intent);
+
+                }
                 }
                     else {
                         //location=false,type=false,rent=false;
